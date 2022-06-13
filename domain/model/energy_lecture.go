@@ -4,6 +4,6 @@ import "time"
 
 type EnergyLecture struct {
 	Id           uint
-	LectureValue uint
+	LectureValue string
 	LectureDate  time.Time
 }
