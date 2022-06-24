@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"rpi-house-energy-display/apps"
 	"rpi-house-energy-display/domain/model"
 	"rpi-house-energy-display/infrastructure/config"
 	"rpi-house-energy-display/infrastructure/repository"
@@ -24,8 +25,9 @@ func main() {
 	client := http.Client{Jar: jar}
 	repo := repository.NewIdeMeterRepository(&client, *configuration)
 	go repo.GetCurrentLecture(lecturesChannel)
-
+	display := apps.Newwavesahre213Display()
 	currentLectureValue := <-lecturesChannel
+	display.Draw(currentLectureValue)
 
 	fmt.Println(currentLectureValue)
 

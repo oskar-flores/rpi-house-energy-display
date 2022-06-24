@@ -24,7 +24,7 @@ type wavesahre213Display struct {
 	Epd     *epaper.Epd
 }
 
-func (display *wavesahre213Display) Newwavesahre213Display() wavesahre213Display {
+func Newwavesahre213Display() wavesahre213Display {
 	registerFonts()
 	waveSahreScreen := wavesahre213Display{
 		width:   104,
@@ -47,7 +47,7 @@ func (display *wavesahre213Display) Newwavesahre213Display() wavesahre213Display
 
 }
 
-func (display *wavesahre213Display) Draw(lecture model.EnergyLecture) {
+func (display *wavesahre213Display) Draw(lecture *model.EnergyLecture) {
 	graphicContext := display.Context
 	graphicContext.SetFillColor(image.Black)
 
@@ -62,11 +62,11 @@ func (display *wavesahre213Display) Draw(lecture model.EnergyLecture) {
 	row := 6.0 + 4.0
 
 	graphicContext.FillStringAt(lecture.LectureValue, 1, row-3)
-	display.show(lecture)
+	display.show()
 
 }
 
-func (display *wavesahre213Display) show(lecture model.EnergyLecture) {
+func (display *wavesahre213Display) show() {
 	dataToshow := display.Epd.GetBuffer(display.Display)
 	display.Epd.Display(dataToshow)
 }
