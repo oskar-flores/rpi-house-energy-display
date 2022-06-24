@@ -2,39 +2,47 @@ package main
 
 import (
 	"fmt"
-	cookiejar "github.com/orirawlings/persistent-cookiejar"
-	"log"
-	"net/http"
-	"os"
-	"rpi-house-energy-display/apps"
-	"rpi-house-energy-display/domain/model"
-	"rpi-house-energy-display/infrastructure/config"
-	"rpi-house-energy-display/infrastructure/repository"
+	epaper "github.com/bestbug456/epaper"
+	"time"
 )
 
 func main() {
-	configuration := config.NewConfig(os.Getenv("IDE_USER"), os.Getenv("IDE_PASS"))
-	lecturesChannel := make(chan *model.EnergyLecture, 1)
+	////configuration := config.NewConfig(os.Getenv("IDE_USER"), os.Getenv("IDE_PASS"))
+	////lecturesChannel := make(chan *model.EnergyLecture, 1)
+	////
+	////jar, err := cookiejar.New(&cookiejar.Options{})
+	////defer jar.Save()
+	////if err != nil {
+	////	log.Fatalf("Got error while creating cookie jar %s", err.Error())
+	////}
+	////
+	////client := http.Client{Jar: jar}
+	////repo := repository.NewIdeMeterRepository(&client, *configuration)
+	////go repo.GetCurrentLecture(lecturesChannel)
+	////
+	////display := apps.Newwavesahre213Display()
+	////defer display.Close()
+	////
+	////currentLectureValue := <-lecturesChannel
+	////display.Draw(currentLectureValue)
+	////display.Epd.Display(getData())
+	//
+	//fmt.Println(currentLectureValue)
+	test()
 
-	jar, err := cookiejar.New(&cookiejar.Options{})
-	defer jar.Save()
-	if err != nil {
-		log.Fatalf("Got error while creating cookie jar %s", err.Error())
-	}
+}
 
-	client := http.Client{Jar: jar}
-	repo := repository.NewIdeMeterRepository(&client, *configuration)
-	go repo.GetCurrentLecture(lecturesChannel)
+func test() {
+	e := epaper.CreateEpd()
+	defer e.Close()
+	defer e.Clear()
+	e.Init()
+	e.Clear()
 
-	display := apps.Newwavesahre213Display()
-	defer display.Close()
-
-	currentLectureValue := <-lecturesChannel
-	display.Draw(currentLectureValue)
-	display.Epd.Display(getData())
-
-	fmt.Println(currentLectureValue)
-
+	fmt.Printf("Display\n")
+	e.Display(getData())
+	fmt.Printf("sleeping\n")
+	time.Sleep(5 * time.Second)
 }
 
 // getData return a image from the gotchi project, more info at https://github.com/GaelicThunder/Chao-Pi-Adventure
