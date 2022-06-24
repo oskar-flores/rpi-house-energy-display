@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-	configuration := config.NewConfig(os.Getenv("user"), os.Getenv("pass"))
+	configuration := config.NewConfig(os.Getenv("IDE_USER"), os.Getenv("IDE_PASS"))
 
 	jar, err := cookiejar.New(nil)
 	if err != nil {
@@ -20,6 +21,6 @@ func main() {
 	client := http.Client{Jar: jar}
 	repo := repository.NewIdeMeterRepository(&client, *configuration)
 
-	print(repo.GetCurrentLecture())
+	fmt.Println(repo.GetCurrentLecture())
 
 }
