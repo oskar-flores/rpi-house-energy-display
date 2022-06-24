@@ -105,3 +105,7 @@ func parseFont(name string) (f *truetype.Font) {
 
 	return f
 }
+
+func (display *wavesahre213Display) Close() {
+	display.Epd.Close()
+}
