@@ -5,7 +5,7 @@ import (
 	"github.com/bestbug456/epaper"
 	cookiejar "github.com/orirawlings/persistent-cookiejar"
 	"log"
-	"net/http"ß
+	"net/http"
 	"os"
 	"rpi-house-energy-display/apps"
 	"rpi-house-energy-display/domain/model"
