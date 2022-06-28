@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	test()
 	configuration := config.NewConfig(os.Getenv("IDE_USER"), os.Getenv("IDE_PASS"))
 	lecturesChannel := make(chan *model.EnergyLecture, 1)
 
