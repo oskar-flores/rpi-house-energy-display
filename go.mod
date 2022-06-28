@@ -11,6 +11,7 @@ require (
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/orirawlings/persistent-cookiejar v0.3.2 // indirect
+	github.com/oskar-flores/edp_2.13_V3 v0.0.0-20220627225414-f519c3ad8ff3 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/spf13/afero v1.8.2 // indirect

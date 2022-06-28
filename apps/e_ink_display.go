@@ -2,10 +2,10 @@ package apps
 
 import (
 	"fmt"
-	"github.com/bestbug456/epaper"
 	"github.com/golang/freetype/truetype"
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
+	epaper "github.com/oskar-flores/edp_2.13_V3"
 	"image"
 	"image/color"
 	"io/ioutil"

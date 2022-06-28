@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/bestbug456/epaper"
 	cookiejar "github.com/orirawlings/persistent-cookiejar"
+	"github.com/oskar-flores/edp_2.13_V3"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+	test()
 	configuration := config.NewConfig(os.Getenv("IDE_USER"), os.Getenv("IDE_PASS"))
 	lecturesChannel := make(chan *model.EnergyLecture, 1)
 
@@ -27,7 +28,6 @@ func main() {
 	client := http.Client{Jar: jar}
 	repo := repository.NewIdeMeterRepository(&client, *configuration)
 	go repo.GetCurrentLecture(lecturesChannel)
-	test()
 	display := apps.Newwavesahre213Display()
 	defer display.Close()
 
