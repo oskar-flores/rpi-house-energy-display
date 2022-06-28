@@ -30,6 +30,7 @@ func main() {
 	go repo.GetCurrentLecture(lecturesChannel)
 	display := apps.Newwavesahre213Display()
 	defer display.Close()
+	defer display.Epd.TurnDisplayOff()
 
 	currentLectureValue := <-lecturesChannel
 	display.Draw(currentLectureValue)

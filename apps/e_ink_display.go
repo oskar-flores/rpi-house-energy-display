@@ -27,8 +27,8 @@ type wavesahre213Display struct {
 func Newwavesahre213Display() wavesahre213Display {
 	registerFonts()
 	waveSahreScreen := wavesahre213Display{
-		width:   104,
-		height:  212,
+		width:   122,
+		height:  250,
 		Display: nil,
 		black:   color.RGBA{A: 0xff},
 		white:   color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
