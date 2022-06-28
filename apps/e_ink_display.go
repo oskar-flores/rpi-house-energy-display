@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"rpi-house-energy-display/domain/model"
+	"time"
 )
 
 type wavesahre213Display struct {
@@ -49,6 +50,7 @@ func Newwavesahre213Display() wavesahre213Display {
 
 func (display *wavesahre213Display) Draw(lecture *model.EnergyLecture) {
 	graphicContext := display.Context
+
 	graphicContext.SetFillColor(image.Black)
 
 	graphicContext.SetDPI(72) // 16 m3x6
@@ -60,8 +62,30 @@ func (display *wavesahre213Display) Draw(lecture *model.EnergyLecture) {
 	})
 
 	row := 6.0 + 4.0
+	offset := -3.0
 
-	graphicContext.FillStringAt(lecture.LectureValue, 1, row-3)
+	graphicContext.SetFontSize(16)
+	graphicContext.FillStringAt("active:", 1, 4*row+offset)
+	graphicContext.SetFontSize(32)
+	graphicContext.FillStringAt(lecture.LectureValue, 60, 4*row+offset)
+	graphicContext.FillStringAt(lecture.LectureValue, 140, 4*row+offset)
+
+	graphicContext.SetFontSize(16)
+	graphicContext.FillStringAt("total:", 1, 5*row+offset+6)
+	//graphicContext.FillStringAt(strconv.Itoa(stats.cases), 60, 5*row+offset+6)
+	//graphicContext.FillStringAt(strconv.Itoa(stats.czCases), 140, 5*row+offset+6)
+	//graphicContext.FillStringAt("recovered:", 1, 6*row+offset+6)
+	//graphicContext.FillStringAt(strconv.Itoa(stats.recovered), 60, 6*row+offset+6)
+	//graphicContext.FillStringAt(strconv.Itoa(stats.czRecovered), 140, 6*row+offset+6)
+	//graphicContext.FillStringAt("deaths:", 1, 7*row+offset+6)
+	//graphicContext.FillStringAt(strconv.Itoa(stats.deaths), 60, 7*row+offset+6)
+	//graphicContext.FillStringAt(strconv.Itoa(stats.czDeaths), 140, 7*row+offset+6)
+	//graphicContext.FillStringAt("(+"+strconv.Itoa(stats.czNew)+")", 140, 8*row+offset+6)
+	//// if prev.cases > 0 {
+	// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
+	// }
+
+	graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
 	display.show()
 
 }
@@ -107,5 +131,7 @@ func parseFont(name string) (f *truetype.Font) {
 }
 
 func (display *wavesahre213Display) Close() {
+	display.Epd.Clear()
+	display.Epd.TurnDisplayOff()
 	display.Epd.Close()
 }
