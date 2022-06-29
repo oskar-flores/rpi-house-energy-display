@@ -50,6 +50,7 @@ func Newwavesahre213Display() Waveshare213Display {
 
 func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	graphicContext := display.Context
+	graphicContext.Scale(-1, float64(display.height))
 
 	graphicContext.SetFillColor(image.Black)
 
@@ -89,6 +90,7 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 }
 
 func (display *Waveshare213Display) show() {
+	//draw2dimg.SaveToPngFile("test.png", display.Display)
 	dataToshow := display.Epd.GetBuffer(display.Display)
 	display.Epd.Display(dataToshow)
 }
