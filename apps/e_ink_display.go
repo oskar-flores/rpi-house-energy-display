@@ -64,8 +64,8 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 
 	graphicContext.SetFontSize(16)
 	graphicContext.FillStringAt("active:", 1, 4*row+offset)
-	graphicContext.FillStringAt("active:", 4*row+offset, 1)
-	graphicContext.FillStringAt("active:", 5*row+offset+6, 140)
+	graphicContext.FillStringAt("active:", 4*row+offset, 40)
+	graphicContext.FillStringAt("active:", 5*row+offset+6, 110)
 	//graphicContext.SetFontSize(32)
 	//graphicContext.FillStringAt(lecture.LectureValue, 60, 4*row+offset)
 	//graphicContext.FillStringAt(lecture.LectureValue, 140, 4*row+offset)
