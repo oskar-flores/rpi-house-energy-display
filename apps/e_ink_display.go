@@ -35,7 +35,7 @@ func Newwavesahre213Display() Waveshare213Display {
 		white:   color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
 		Context: nil,
 	}
-	screen.Display = image.NewRGBA(image.Rect(0, 0, screen.height, screen.width))
+	screen.Display = image.NewRGBA(image.Rect(0, 0, screen.width, screen.height))
 	screen.Context = draw2dimg.NewGraphicContext(screen.Display)
 
 	screen.Context.SetFillColor(screen.white)
@@ -83,7 +83,7 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	//// if prev.cases > 0 {
 	// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
 	// }
-	drawRect(graphicContext, 1, 250+offset, 3, 3)
+	drawRect(graphicContext, 1, 250+offset, 10, 10)
 	graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
 	display.show()
 
