@@ -4,7 +4,7 @@ require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/llgcode/draw2d v0.0.0-20210904075650-80aa0a2a901d
 	github.com/orirawlings/persistent-cookiejar v0.3.2
-	github.com/oskar-flores/edp_2.13_V3 v0.0.0-20220629172004-2c83201ab0bc
+	github.com/oskar-flores/edp_2.13_V3 v0.0.0-20220629172604-2de8999f0b8b
 	github.com/sirupsen/logrus v1.8.1
 )
 
