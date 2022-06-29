@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-type wavesahre213Display struct {
+type Waveshare213Display struct {
 	width   int
 	height  int
 	black   color.RGBA
@@ -25,9 +25,9 @@ type wavesahre213Display struct {
 	Epd     *epaper.Epd
 }
 
-func Newwavesahre213Display() wavesahre213Display {
+func Newwavesahre213Display() Waveshare213Display {
 	registerFonts()
-	waveSahreScreen := wavesahre213Display{
+	screen := Waveshare213Display{
 		width:   122,
 		height:  250,
 		Display: nil,
@@ -35,26 +35,25 @@ func Newwavesahre213Display() wavesahre213Display {
 		white:   color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
 		Context: nil,
 	}
-	waveSahreScreen.Display = image.NewRGBA(image.Rect(0, 0, waveSahreScreen.height, waveSahreScreen.width))
-	waveSahreScreen.Context = draw2dimg.NewGraphicContext(waveSahreScreen.Display)
+	screen.Display = image.NewRGBA(image.Rect(0, 0, screen.height, screen.width))
+	screen.Context = draw2dimg.NewGraphicContext(screen.Display)
 
-	waveSahreScreen.Context.SetFillColor(waveSahreScreen.white)
-	waveSahreScreen.Context.Fill()
+	screen.Context.SetFillColor(screen.white)
+	screen.Context.Fill()
 	epd := epaper.CreateEpd()
-	waveSahreScreen.Epd = &epd
-	waveSahreScreen.Epd.Init()
+	screen.Epd = &epd
+	screen.Epd.Init()
 
-	return waveSahreScreen
+	return screen
 
 }
 
-func (display *wavesahre213Display) Draw(lecture *model.EnergyLecture) {
+func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	graphicContext := display.Context
 
 	graphicContext.SetFillColor(image.Black)
 
 	graphicContext.SetDPI(72) // 16 m3x6
-	// gc.SetDPI(96) // 12 m3x6
 	graphicContext.SetFontSize(16)
 
 	graphicContext.SetFontData(draw2d.FontData{
@@ -84,23 +83,23 @@ func (display *wavesahre213Display) Draw(lecture *model.EnergyLecture) {
 	//// if prev.cases > 0 {
 	// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
 	// }
-
+	drawRect(graphicContext, 1, 250+offset, 3, 3)
 	graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
 	display.show()
 
 }
 
-func (display *wavesahre213Display) show() {
+func (display *Waveshare213Display) show() {
 	dataToshow := display.Epd.GetBuffer(display.Display)
 	display.Epd.Display(dataToshow)
 }
 
-func drawRect(gc *draw2dimg.GraphicContext, x, y, w, h float64) {
+func drawRect(gc *draw2dimg.GraphicContext, x, y, width, height float64) {
 	gc.BeginPath()
 	gc.MoveTo(x, y)
-	gc.LineTo(x+w, y)
-	gc.LineTo(x+w, y+h)
-	gc.LineTo(x, y+h)
+	gc.LineTo(x+width, y)
+	gc.LineTo(x+width, y+height)
+	gc.LineTo(x, y+height)
 	gc.Close()
 }
 
@@ -130,7 +129,7 @@ func parseFont(name string) (f *truetype.Font) {
 	return f
 }
 
-func (display *wavesahre213Display) Close() {
+func (display *Waveshare213Display) Close() {
 	display.Epd.Clear()
 	display.Epd.TurnDisplayOff()
 	display.Epd.Close()
