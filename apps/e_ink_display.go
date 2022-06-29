@@ -48,7 +48,7 @@ func Newwavesahre213Display() Waveshare213Display {
 }
 
 func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
-	graphicContext := display.Context
+	graphicContext := *display.Context
 
 	graphicContext.SetFillColor(image.Black)
 
@@ -85,7 +85,7 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	//// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
 	//// }
 	////graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
-	graphicContext.Rotate(180)
+	graphicContext.Rotate(90)
 	display.show()
 
 }
