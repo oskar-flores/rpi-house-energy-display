@@ -35,7 +35,7 @@ func Newwavesahre213Display() Waveshare213Display {
 		white:   color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
 		Context: nil,
 	}
-	screen.Display = image.NewRGBA(image.Rect(0, 0, screen.width, screen.height))
+	screen.Display = image.NewRGBA(image.Rect(0, 0, screen.height, screen.width))
 	screen.Context = draw2dimg.NewGraphicContext(screen.Display)
 
 	screen.Context.SetFillColor(screen.white)
