@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"rpi-house-energy-display/domain/model"
+	"time"
 )
 
 type Waveshare213Display struct {
@@ -48,7 +49,7 @@ func Newwavesahre213Display() Waveshare213Display {
 }
 
 func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
-	graphicContext := *display.Context
+	graphicContext := display.Context
 
 	graphicContext.SetFillColor(image.Black)
 
@@ -64,14 +65,12 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 
 	graphicContext.SetFontSize(16)
 	graphicContext.FillStringAt("active:", 1, 4*row+offset)
-	graphicContext.FillStringAt("active:", 4*row+offset, 40)
-	graphicContext.FillStringAt("active:", 5*row+offset+6, 110)
-	//graphicContext.SetFontSize(32)
-	//graphicContext.FillStringAt(lecture.LectureValue, 60, 4*row+offset)
-	//graphicContext.FillStringAt(lecture.LectureValue, 140, 4*row+offset)
-	//
-	//graphicContext.SetFontSize(16)
-	//graphicContext.FillStringAt("total:", 1, 5*row+offset+6)
+	graphicContext.SetFontSize(32)
+	graphicContext.FillStringAt(lecture.LectureValue, 60, 4*row+offset)
+	graphicContext.FillStringAt(lecture.LectureValue, 140, 4*row+offset)
+
+	graphicContext.SetFontSize(16)
+	graphicContext.FillStringAt("total:", 1, 5*row+offset+6)
 	////graphicContext.FillStringAt(strconv.Itoa(stats.cases), 60, 5*row+offset+6)
 	////graphicContext.FillStringAt(strconv.Itoa(stats.czCases), 140, 5*row+offset+6)
 	////graphicContext.FillStringAt("recovered:", 1, 6*row+offset+6)
@@ -84,8 +83,7 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	////// if prev.cases > 0 {
 	//// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
 	//// }
-	////graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
-	graphicContext.Rotate(90)
+	graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
 	display.show()
 
 }
