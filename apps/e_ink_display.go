@@ -50,10 +50,13 @@ func Newwavesahre213Display() Waveshare213Display {
 
 func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	graphicContext := display.Context
-	graphicContext.Scale(-1, float64(display.height))
+
+	//V3 driver buffer generation is priting  "mirror mode"
+	//so we flip the image arong x axis, and then is correctly displayed
+	//int the device.
+	flipImage(graphicContext, display.width, 2)
 
 	graphicContext.SetFillColor(image.Black)
-
 	graphicContext.SetDPI(72) // 16 m3x6
 	graphicContext.SetFontSize(16)
 
@@ -85,14 +88,15 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	//// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
 	//// }
 	graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
+
 	display.show()
 
 }
 
 func (display *Waveshare213Display) show() {
 	//draw2dimg.SaveToPngFile("test.png", display.Display)
-	dataToshow := display.Epd.GetBuffer(display.Display)
-	display.Epd.Display(dataToshow)
+	dataAsBuffer := display.Epd.GetBuffer(display.Display)
+	display.Epd.Display(dataAsBuffer)
 }
 
 func drawRect(gc *draw2dimg.GraphicContext, x, y, width, height float64) {
@@ -134,4 +138,10 @@ func (display *Waveshare213Display) Close() {
 	display.Epd.Clear()
 	display.Epd.TurnDisplayOff()
 	display.Epd.Close()
+}
+
+// Flips the image around the X axis, and adjusts offset
+func flipImage(gc draw2d.GraphicContext, width, offset int) {
+	gc.Translate(float64(width*offset), 0)
+	gc.Scale(-1, 1)
 }
