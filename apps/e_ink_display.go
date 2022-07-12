@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"rpi-house-energy-display/domain/model"
+	outputModlels "rpi-house-energy-display/apps/model"
 	"time"
 )
 
@@ -48,7 +48,7 @@ func Newwavesahre213Display() Waveshare213Display {
 
 }
 
-func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
+func (display *Waveshare213Display) Draw(data outputModlels.DisplayModel) {
 	graphicContext := display.Context
 
 	//V3 driver buffer generation is priting  "mirror mode"
@@ -61,40 +61,29 @@ func (display *Waveshare213Display) Draw(lecture *model.EnergyLecture) {
 	graphicContext.SetFontSize(16)
 
 	graphicContext.SetFontData(draw2d.FontData{
-		Name: "m3x6",
+		Name: "inconsolata",
 	})
 
 	row := 6.0 + 4.0
 	offset := -3.0
 
 	graphicContext.SetFontSize(16)
-	graphicContext.FillStringAt("active:", 1, 4*row+offset)
-	graphicContext.SetFontSize(32)
-	graphicContext.FillStringAt(lecture.LectureValue, 60, 4*row+offset)
-	graphicContext.FillStringAt(lecture.LectureValue, 140, 4*row+offset)
+	graphicContext.FillStringAt("Current Lecture:", 1, 4*row+offset)
+	graphicContext.FillStringAt("Current Cost:", 1, 5*row+offset)
+	graphicContext.SetFontSize(24)
+	graphicContext.FillStringAt(fmt.Sprintf("%f", data.CurrentLecture), 120, 4*row+offset)
+	graphicContext.FillStringAt(fmt.Sprintf("%f", data.CurrentPrice), 120, 5*row+offset)
 
 	graphicContext.SetFontSize(16)
-	graphicContext.FillStringAt("total:", 1, 5*row+offset+6)
-	////graphicContext.FillStringAt(strconv.Itoa(stats.cases), 60, 5*row+offset+6)
-	////graphicContext.FillStringAt(strconv.Itoa(stats.czCases), 140, 5*row+offset+6)
-	////graphicContext.FillStringAt("recovered:", 1, 6*row+offset+6)
-	////graphicContext.FillStringAt(strconv.Itoa(stats.recovered), 60, 6*row+offset+6)
-	////graphicContext.FillStringAt(strconv.Itoa(stats.czRecovered), 140, 6*row+offset+6)
-	////graphicContext.FillStringAt("deaths:", 1, 7*row+offset+6)
-	////graphicContext.FillStringAt(strconv.Itoa(stats.deaths), 60, 7*row+offset+6)
-	////graphicContext.FillStringAt(strconv.Itoa(stats.czDeaths), 140, 7*row+offset+6)
-	////graphicContext.FillStringAt("(+"+strconv.Itoa(stats.czNew)+")", 140, 8*row+offset+6)
-	////// if prev.cases > 0 {
-	//// 	gc.FillStringAt("(+"+strconv.Itoa(stats.cases-prev.cases)+")", 60, 8*row-2)
-	//// }
-	graphicContext.FillStringAt("Last refreshed: "+lecture.LectureDate.Format(time.RFC3339), 1, 103)
+	graphicContext.FillStringAt("total:", 1, 6*row+offset+6)
+	graphicContext.FillStringAt(fmt.Sprintf("%f", data.CurrentCostInPVC)+" Eur", 60, 6*row+offset+6)
+	graphicContext.FillStringAt("Last refreshed: "+time.Now().Format(time.RFC3339), 1, 103)
 
 	display.show()
 
 }
 
 func (display *Waveshare213Display) show() {
-	//draw2dimg.SaveToPngFile("test.png", display.Display)
 	dataAsBuffer := display.Epd.GetBuffer(display.Display)
 	display.Epd.Display(dataAsBuffer)
 }
@@ -109,10 +98,10 @@ func drawRect(gc *draw2dimg.GraphicContext, x, y, width, height float64) {
 }
 
 func registerFonts() {
-	m3x6Font := parseFont("m3x6")
+	inconsolata := parseFont("inconsolata")
 	draw2d.RegisterFont(draw2d.FontData{
-		Name: "m3x6",
-	}, m3x6Font)
+		Name: "inconsolata",
+	}, inconsolata)
 
 	fmt.Println("fonts registered")
 }

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"rpi-house-energy-display/apps"
+	outputModels "rpi-house-energy-display/apps/model"
 	"rpi-house-energy-display/domain/model"
 	"rpi-house-energy-display/infrastructure/config"
 	"rpi-house-energy-display/infrastructure/repository"
@@ -14,7 +15,7 @@ import (
 
 func main() {
 	configuration := config.NewConfig(os.Getenv("IDE_USER"), os.Getenv("IDE_PASS"))
-	lecturesChannel := make(chan *model.EnergyLecture, 1)
+	lecturesChannel := make(chan *model.EnergyMeasurement, 1)
 
 	jar, err := cookiejar.New(&cookiejar.Options{})
 	defer jar.Save()
@@ -23,14 +24,22 @@ func main() {
 	}
 
 	client := http.Client{Jar: jar}
-	repo := repository.NewIdeMeterRepository(&client, *configuration)
-	go repo.GetCurrentLecture(lecturesChannel)
+	meterService := repository.NewIdeMeterService(&client, *configuration)
+	priceService := repository.NewEnergyPoolService(&client)
+
+	go meterService.GetCurrentLecture(lecturesChannel)
+	price, _ := priceService.GetCurrentEnergyCost()
+
 	display := apps.Newwavesahre213Display()
 	defer display.Close()
 	defer display.Epd.TurnDisplayOff()
 
 	currentLectureValue := <-lecturesChannel
-	display.Draw(currentLectureValue)
+	displayModel, err := outputModels.NewDisplayModel(price.Value, currentLectureValue.LectureValue)
+	if err != nil {
+		return
+	}
+	display.Draw(*displayModel)
 
 	fmt.Println(currentLectureValue)
 

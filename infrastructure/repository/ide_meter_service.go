@@ -13,21 +13,22 @@ import (
 	"rpi-house-energy-display/domain/contracts"
 	"rpi-house-energy-display/domain/model"
 	"rpi-house-energy-display/infrastructure/config"
+	"strconv"
 	"time"
 )
 
 type cookieList []map[string]interface{}
 
-type ideMeterRepository struct {
+type ideMeterService struct {
 	client *http.Client
 	config config.Config
 }
 
-func NewIdeMeterRepository(client *http.Client, config config.Config) contracts.SmartMeterService {
-	return &ideMeterRepository{client: client, config: config}
+func NewIdeMeterService(client *http.Client, config config.Config) contracts.SmartMeterService {
+	return &ideMeterService{client: client, config: config}
 }
 
-func (imr *ideMeterRepository) GetCurrentLecture(rc chan *model.EnergyLecture) error {
+func (imr *ideMeterService) GetCurrentLecture(rc chan *model.EnergyMeasurement) error {
 	reqChannel := make(chan *http.Response, 1)
 
 	if imr.validateConnection() {
@@ -45,9 +46,14 @@ func (imr *ideMeterRepository) GetCurrentLecture(rc chan *model.EnergyLecture) e
 			return err
 		}
 
-		lecture := &model.EnergyLecture{
+		value, err := strconv.ParseFloat(read.ValMagnitud, 64)
+
+		if err != nil {
+			return err
+		}
+		lecture := &model.EnergyMeasurement{
 			Id:           0,
-			LectureValue: read.ValLecturaContador,
+			LectureValue: value,
 			LectureDate:  time.Now(),
 		}
 
@@ -60,7 +66,7 @@ func (imr *ideMeterRepository) GetCurrentLecture(rc chan *model.EnergyLecture) e
 	return errors.New("Unable to validate connection to the smart meter ")
 }
 
-func (imr *ideMeterRepository) callMeterEndpoint(reqChannel chan *http.Response) error {
+func (imr *ideMeterService) callMeterEndpoint(reqChannel chan *http.Response) error {
 	request, err := http.NewRequest("GET", "https://www.i-de.es/consumidores/rest/escenarioNew/obtenerMedicionOnline/24", nil)
 
 	request.Header.Set("AppVersion", "v2")
@@ -74,7 +80,7 @@ func (imr *ideMeterRepository) callMeterEndpoint(reqChannel chan *http.Response)
 	return err
 }
 
-func (imr *ideMeterRepository) login(user string, pass string) {
+func (imr *ideMeterService) login(user string, pass string) {
 	var payload = fmt.Sprintf("[\"%s\",\"%s\",\"null\", \"Mac OS X 10_15_7\",\"PC\",\"Chrome 102.0.5005.115\",\"0\",\"\",\"n\"]", user, pass)
 	var jsonStr = []byte(payload)
 	request, _ := http.NewRequest("POST", "https://www.i-de.es/consumidores/rest/loginNew/login", bytes.NewBuffer(jsonStr))
@@ -94,7 +100,7 @@ func (imr *ideMeterRepository) login(user string, pass string) {
 	logrus.Debug(postResponse)
 }
 
-func (imr *ideMeterRepository) validateConnection() bool {
+func (imr *ideMeterService) validateConnection() bool {
 	imr.login(imr.config.User(), imr.config.Password())
 	//first validate conection
 	request, err := http.NewRequest("GET", "https://www.i-de.es/consumidores/rest/escenarioNew/validarComunicacionContador/", nil)
@@ -122,7 +128,7 @@ func (imr *ideMeterRepository) validateConnection() bool {
 }
 
 type readResponse struct {
-	ValMagnitud        string
+	ValMagnitud        string // value is in watts
 	ValInterruptor     string
 	ValEstado          string
 	ValLecturaContador string

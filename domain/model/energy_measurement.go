@@ -2,8 +2,8 @@ package model
 
 import "time"
 
-type EnergyLecture struct {
+type EnergyMeasurement struct {
 	Id           uint
-	LectureValue string
+	LectureValue float64
 	LectureDate  time.Time
 }
