@@ -29,8 +29,8 @@ type Waveshare213Display struct {
 func Newwavesahre213Display() Waveshare213Display {
 	registerFonts()
 	screen := Waveshare213Display{
-		width:   122,
-		height:  250,
+		width:   122, //y
+		height:  250, //x
 		Display: nil,
 		black:   color.RGBA{A: 0xff},
 		white:   color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
@@ -70,14 +70,13 @@ func (display *Waveshare213Display) Draw(data outputModlels.DisplayModel) {
 
 	graphicContext.SetFontSize(16)
 	graphicContext.FillStringAt("Current Lecture:", 1, 4*row+offset)
-	graphicContext.FillStringAt("Current Cost:", 1, 9*row+offset)
-	graphicContext.SetFontSize(18)
-	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentLecture, 'f', -1, 32), 150, 4*row+offset)
-	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentPrice, 'f', -1, 32), 150, 9*row+offset)
+	graphicContext.FillStringAt("Current Cost:", 1, 5*row+offset)
+	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentLecture, 'f', -1, 32)+" watts", 150, 4*row+offset)
+	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentPrice, 'f', -1, 32)+" eur / wats", 150, 5*row+offset)
 
 	graphicContext.SetFontSize(16)
-	graphicContext.FillStringAt("total:", 1, 12*row+offset+6)
-	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentLecture, 'f', -1, 32)+" Eur", 60, 12*row+offset+6)
+	graphicContext.FillStringAt("total:", 1, 6*row+offset+6)
+	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentCostInPVC, 'f', -1, 32)+" Eur", 60, 6*row+offset+6)
 	graphicContext.FillStringAt("Last refreshed: "+time.Now().Format(time.RFC3339), 1, 103)
 
 	display.show()
@@ -85,6 +84,7 @@ func (display *Waveshare213Display) Draw(data outputModlels.DisplayModel) {
 }
 
 func (display *Waveshare213Display) show() {
+	draw2dimg.SaveToPngFile("display.png", display.Display)
 	dataAsBuffer := display.Epd.GetBuffer(display.Display)
 	display.Epd.Display(dataAsBuffer)
 }
