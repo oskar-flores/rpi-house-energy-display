@@ -69,14 +69,14 @@ func (display *Waveshare213Display) Draw(data outputModlels.DisplayModel) {
 	offset := -3.0
 
 	graphicContext.SetFontSize(16)
-	graphicContext.FillStringAt("Current Lecture:", 1, 4*row+offset)
-	graphicContext.FillStringAt("Current Cost:", 1, 5*row+offset)
-	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentLecture, 'f', -1, 32)+" watts", 150, 4*row+offset)
-	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentPrice, 'f', -1, 32)+" eur / wats", 150, 5*row+offset)
+	graphicContext.FillStringAt("Current Measure:", 1, 4*row+offset)
+	graphicContext.FillStringAt("Current Cost:", 1, 6*row+offset)
+	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentLecture, 'f', -1, 32)+" watts", 125, 4*row+offset)
+	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentPrice, 'f', -1, 32)+" E/w", 125, 6*row+offset)
 
 	graphicContext.SetFontSize(16)
-	graphicContext.FillStringAt("total:", 1, 6*row+offset+6)
-	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentCostInPVC, 'f', -1, 32)+" Eur", 60, 6*row+offset+6)
+	graphicContext.FillStringAt("total:", 1, 8*row+offset+6)
+	graphicContext.FillStringAt(strconv.FormatFloat(data.CurrentCostInPVC, 'f', -1, 32)+" Eur", 60, 8*row+offset+6)
 	graphicContext.FillStringAt("Last refreshed: "+time.Now().Format(time.RFC3339), 1, 103)
 
 	display.show()
